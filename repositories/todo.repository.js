@@ -26,7 +26,7 @@ class TodoRepository {
             id: record.id,
         });
     }
-    static static async find(id){
+    static async find(id){
         const [results] =  await pool.execute('SELECT * FROM `todos` WHERE `id` = :id', {
             id,
         });
@@ -34,15 +34,21 @@ class TodoRepository {
         return results.length === 1 ? new TodoRecord(results[0]) : null;
     }
 
-    static async  update(){
-        if(!this.id){
+    static async findAll(){
+        const results =  await pool.execute('SELECT * FROM `todos`');
+
+        return results[0];
+    }
+
+    static async  update(record){
+        if(!record.id){
             throw new Error('Todo has no ID');
         }
 
-        this._validate();
+        // this._validate();
         await pool.execute('UPDATE `todos` SET `title` = :title WHERE `id` = :id', {
-            id: this.id,
-            title: this.title,
+            id: record.id,
+            title: record.title,
         })
     }
 }

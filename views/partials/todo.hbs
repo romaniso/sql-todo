@@ -1,0 +1,6 @@
+<li>
+    {{todo.title}}
+    <form method="POST" action='/todo{{this.id}}?_method=DELETE'>
+        <button type="submit">Usuń</button>
+    </form>
+</li>

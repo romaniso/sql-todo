@@ -1,2 +1,10 @@
 <h1>Todo list</h1>
 <p>What are your aims today?</p>
+<hr>
+<h2>Lista rzeczy do zrobienia:</h2>
+{{log todos}}
+<ul>
+    {{#each todos}}
+        {{> todo todo=this }}
+    {{/each}}
+</ul>
