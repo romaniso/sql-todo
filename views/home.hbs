@@ -8,3 +8,9 @@
         {{> todo todo=this }}
     {{/each}}
 </ul>
+<hr>
+<h3>Dodaj nowe zadanie:</h3>
+<form method="POST" action='/added'>
+    <input type="text" name="title">
+    <button type="submit">Dodaj</button>
+</form>
