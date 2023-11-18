@@ -11,7 +11,7 @@ class TodoRepository {
     static async  insert(record){
         TodoRepository._checkRecord(record);
         record.id = record.id ?? uuid();
-        await pool.execute('INSERT INTO `todos` VALUES(:id, :title)', {
+        await pool.execute('INSERT INTO `todos` (`id`, `title`) VALUES(:id, :title)', {
             id: record.id,
             title: record.title,
         })
@@ -35,7 +35,7 @@ class TodoRepository {
     }
 
     static async findAll(){
-        const results =  await pool.execute('SELECT * FROM `todos`');
+        const results =  await pool.execute('SELECT * FROM `todos` ORDER BY `addedAt`');
 
         return results[0];
     }

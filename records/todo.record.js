@@ -1,4 +1,3 @@
-const {pool} = require("../utils/db");
 const {v4: uuid} = require("uuid");
 
 class TodoRecord {

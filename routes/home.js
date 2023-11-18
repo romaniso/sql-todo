@@ -1,7 +1,6 @@
 const express = require('express');
 const homeRouter = express.Router();
 const bodyParser = require('body-parser');
-const {pool} = require("../utils/db");
 const {TodoRecord} = require("../records/todo.record");
 const {TodoRepository} = require("../repositories/todo.repository");
 
@@ -12,7 +11,6 @@ homeRouter.use(bodyParser.urlencoded({ extended: false }));
 homeRouter
     .get('/', async (req, res) => {
         const foundTodos = await TodoRepository.findAll();
-        // await pool.end();
         res.render('home', {
             todos: foundTodos,
         });
@@ -28,6 +26,9 @@ homeRouter
         await TodoRepository.insert(newTodo);
         res.render('added');
     })
+    // .put('/edit:id', async (req, res) => {
+    //     res.render('edited')
+    // })
 
 module.exports = {
     homeRouter,
