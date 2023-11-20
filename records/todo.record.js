@@ -1,10 +1,9 @@
-const {pool} = require("../utils/db");
-const {v4: uuid} = require("uuid");
+const {ObjectId} = require("mongodb");
 
 class TodoRecord {
     constructor(obj) {
+        this._id = new ObjectId(obj._id);
         this.title = obj.title;
-        this.id = obj.id;
         this._validate();
     }
 

@@ -1,13 +1,12 @@
- const mysql = require('mysql2/promise');
+const {MongoClient} = require('mongodb');
 
-const pool = mysql.createPool({
-    host: 'localhost',
-    user: 'root',
-    database: 'megak_todo',
-    namedPlaceholders: true,
-    decimalNumbers: true,
-});
+const client = new MongoClient('mongodb://127.0.0.1:27017/');
 
- module.exports = {
-     pool,
- };
+const db = client.db('megak_todo');
+const todos = db.collection('todos');
+
+module.exports = {
+    db,
+    todos,
+    client,
+};

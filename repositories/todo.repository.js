@@ -1,6 +1,7 @@
 const {v4: uuid} = require("uuid");
-const {pool} = require("../utils/db");
 const {TodoRecord} = require("../records/todo.record");
+const {todos} = require("../utils/db");
+const {ObjectId} = require("mongodb");
 
 class TodoRepository {
     static _checkRecord(record){
@@ -10,40 +11,32 @@ class TodoRepository {
     }
     static async  insert(record){
         TodoRepository._checkRecord(record);
-        record.id = record.id ?? uuid();
-        await pool.execute('INSERT INTO `todos` VALUES(:id, :title)', {
-            id: record.id,
-            title: record.title,
-        })
-        return record.id;
+        const {insertedId} = await todos.insertOne(record);
+        record._id = insertedId;
+        return insertedId;
     }
     static async delete(record){
         TodoRepository._checkRecord(record);
-        if(!record.id){
-            throw new Error('Todo has no ID');
-        }
-        await pool.execute('DELETE FROM `todos` WHERE `id` = :id', {
-            id: record.id,
-        });
-    }
-    static static async find(id){
-        const [results] =  await pool.execute('SELECT * FROM `todos` WHERE `id` = :id', {
-            id,
-        });
-
-        return results.length === 1 ? new TodoRecord(results[0]) : null;
-    }
-
-    static async  update(){
-        if(!this.id){
-            throw new Error('Todo has no ID');
-        }
-
-        this._validate();
-        await pool.execute('UPDATE `todos` SET `title` = :title WHERE `id` = :id', {
-            id: this.id,
-            title: this.title,
+        await todos.deleteOne({
+            _id: record._id,
         })
+    }
+    static async find(id){
+        const item = await todos.findOne({_id: new ObjectId(String(id))});
+        return item === null ? null : new TodoRecord(item);
+    }
+
+    static async findAll(){
+        return (await todos.find()).toArray();
+    }
+
+    static async  update(record){
+        TodoRepository._checkRecord(record);
+        await todos.replaceOne({
+            _id: record._id,
+        }, {
+            title: String(record.title),
+        });
     }
 }
 
